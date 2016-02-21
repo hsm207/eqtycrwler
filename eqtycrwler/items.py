@@ -7,7 +7,7 @@
 
 import scrapy
 
-
+# TODO insert attribute for trading exchange
 class EqtycrwlerItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
@@ -20,3 +20,4 @@ class EqtycrwlerItem(scrapy.Item):
     profile_link = scrapy.Field()
     # store the row number of a security for comparison purposes
     row_num = scrapy.Field()
+    scrape_time = scrapy.Field()

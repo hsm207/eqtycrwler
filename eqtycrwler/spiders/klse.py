@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import datetime
 import json
+
 import scrapy
 from scrapy.selector import Selector
+
 from eqtycrwler.items import EqtycrwlerItem
 
 
@@ -28,6 +31,7 @@ class KlseSpider(scrapy.Spider):
         if rows:
             for row in rows:
                 item = EqtycrwlerItem()
+                item['scrape_time'] = datetime.datetime.utcnow()
                 item['row_num'] = int(row.xpath('(./td)[1]/text()').extract_first())
                 item['code'] = row.xpath('(./td)[2]/text()').extract_first()
                 item['short_name'] = row.xpath('(./td)[3]/a/text()').extract_first()

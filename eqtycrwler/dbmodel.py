@@ -1,6 +1,6 @@
-from sqlalchemy import create_engine, Column, String, BigInteger
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, Column, String, BigInteger, DateTime
 from sqlalchemy.engine.url import URL
+from sqlalchemy.ext.declarative import declarative_base
 
 import settings
 
@@ -27,3 +27,4 @@ class Profiles(DeclarativeBase):
     bursa_profile = Column('exchange_link', String, nullable=False)
     profile_link = Column('profile_link', String, nullable=True)
     row_num = Column('row_num', BigInteger, nullable=False)
+    scrape_time = Column('scrape_time_gmt', DateTime, nullable=False)
