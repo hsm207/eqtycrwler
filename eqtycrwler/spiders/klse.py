@@ -28,6 +28,7 @@ class KlseSpider(scrapy.Spider):
         if rows:
             for row in rows:
                 item = EqtycrwlerItem()
+                item['row_num'] = int(row.xpath('(./td)[1]/text()').extract_first())
                 item['code'] = row.xpath('(./td)[2]/text()').extract_first()
                 item['short_name'] = row.xpath('(./td)[3]/a/text()').extract_first()
                 item['bursa_profile'] = response.urljoin(row.xpath('(./td)[3]/a/@href').extract_first())
@@ -41,8 +42,9 @@ class KlseSpider(scrapy.Spider):
     def parse_profile(self, response):
         item = response.meta['item']
         profile = response.xpath('//*[(@id = "yfncsumtab")]//p/text()').extract_first()
-        if not ('There is no Profile data available' in profile):
+        if not(profile is None) and not('There is no Profile data available' in profile):
             item['yhoo_profile'] = profile
+            item['profile_link'] = response.url
             yield item
         else:
             self.logger.info("No profile found for %s on Yahoo" % item['short_name'])
@@ -52,6 +54,9 @@ class KlseSpider(scrapy.Spider):
 
     def fallback_profile(self, response):
         item = response.meta['item']
+        # msn site stores 'no profile' in a different tag
+        # therefore, xpath will return None if profile is not available
         item['yhoo_profile'] = response.xpath(
             '//*[contains(concat( " ", @class, " " ), concat( " ", "toggle-text", " " ))]/text()').extract_first()
+        item['profile_link'] = response.url
         yield item
